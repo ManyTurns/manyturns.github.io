@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ManyTurns</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0F1620;
+    --ink-deep: #0A0F16;
+    --brass: #C7A15A;
+    --brass-dim: #8A7141;
+    --teal: #3E5C5C;
+    --parchment: #E9E2D0;
+    --parchment-dim: #A7A190;
+    --line: #29343D;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    background: var(--ink);
+    color: var(--parchment);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+
+  body {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* --- Signature element: a winding route line, like a chart of a long
+     voyage with many turns, drawn once across the whole page --- */
+  .route {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.55;
+  }
+
+  .route path {
+    fill: none;
+    stroke: var(--teal);
+    stroke-width: 1.4;
+    stroke-dasharray: 6 7;
+  }
+
+  .route circle {
+    fill: var(--brass);
+  }
+
+  .route .waypoint-glow {
+    fill: var(--brass);
+    opacity: 0.18;
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 8vh 28px;
+    width: 100%;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.22em;
+    color: var(--brass);
+    text-transform: uppercase;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .eyebrow::before {
+    content: "";
+    display: inline-block;
+    width: 22px;
+    height: 1px;
+    background: var(--brass-dim);
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-size: clamp(2.6rem, 7vw, 4.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--parchment);
+    max-width: 11ch;
+  }
+
+  h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--brass);
+  }
+
+  .lede {
+    margin-top: 26px;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--parchment-dim);
+    max-width: 46ch;
+  }
+
+  .lede strong {
+    color: var(--parchment);
+    font-weight: 500;
+  }
+
+  .status {
+    margin-top: 52px;
+    padding-top: 26px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--parchment-dim);
+  }
+
+  .status .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brass);
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(199, 161, 90, 0.15);
+  }
+
+  .status a {
+    color: var(--parchment);
+    text-decoration: none;
+    border-bottom: 1px solid var(--brass-dim);
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .status a:hover,
+  .status a:focus-visible {
+    color: var(--brass);
+    border-color: var(--brass);
+  }
+
+  footer {
+    position: relative;
+    z-index: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--parchment-dim);
+    letter-spacing: 0.04em;
+    padding: 20px 28px 28px;
+    max-width: 720px;
+    margin: 0 auto;
+    width: 100%;
+    opacity: 0.6;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .route path {
+      animation: draw 3.2s ease-out forwards;
+    }
+  }
+
+  @keyframes draw {
+    from { stroke-dashoffset: 1400; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  @media (max-width: 520px) {
+    main { padding: 10vh 22px 6vh; }
+    .status { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+  <svg class="route" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <path d="M -50 120
+             C 150 60, 260 260, 460 210
+             S 760 40, 900 180
+             S 700 480, 480 460
+             S 120 380, 200 620
+             S 620 760, 560 950
+             S 200 1020, -80 880"
+          stroke-dashoffset="1400" pathLength="1400" />
+    <g>
+      <circle class="waypoint-glow" cx="460" cy="210" r="14"/>
+      <circle cx="460" cy="210" r="3.5"/>
+      <circle class="waypoint-glow" cx="480" cy="460" r="14"/>
+      <circle cx="480" cy="460" r="3.5"/>
+      <circle class="waypoint-glow" cx="560" cy="950" r="14"/>
+      <circle cx="560" cy="950" r="3.5"/>
+    </g>
+  </svg>
+
+  <main>
+    <div class="eyebrow">ManyTurns</div>
+    <h1>Small models, built with <em>intent</em>.</h1>
+    <p class="lede">
+      We work on efficient AI models — <strong>distillation, careful
+      fine-tuning, and architectures built from scratch</strong> — designed
+      to run fast and run local, without needing a data center to do it.
+    </p>
+    <div class="status">
+      <span class="dot" aria-hidden="true"></span>
+      <span>Site's early. Find the work in progress on
+        <a href="https://github.com/Sm0r3s-source">GitHub</a>.
+      </span>
+    </div>
+  </main>
+
+  <footer>&copy; <span id="year"></span> ManyTurns</footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
